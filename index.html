@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>Hadith Video</title>
+<style>
+  :root {
+    --green-d: #052e21;
+    --green: #0b5a3f;
+    --gold: #e7c65a;
+    --mint: #7fe0b5;
+    --cream: #fbf5e1;
+    --accent: var(--gold);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; overflow: hidden; }
+  body {
+    font-family: 'SolaimanLipi', 'Noto Serif Bengali', 'Kalpurush', 'Noto Sans Bengali', serif;
+    color: var(--cream);
+  }
+  #stage { position: relative; overflow: hidden; background: radial-gradient(circle at 50% 35%, #0e6a4a 0%, var(--green) 40%, var(--green-d) 100%); }
+  #stage.A { width: 1080px; height: 1920px; }
+  #stage.B { width: 1920px; height: 1080px; }
+
+  #pattern { position: absolute; inset: -200px; background: url('assets/pattern.svg') repeat; opacity: .18; will-change: transform; }
+  #glow { position: absolute; width: 1200px; height: 1200px; left: 50%; top: 50%; margin: -600px 0 0 -600px;
+          background: radial-gradient(circle, rgba(231,198,90,.22), rgba(231,198,90,0) 62%); }
+  #vignette { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+
+  /* ---------- header ---------- */
+  #head { position: absolute; display: flex; align-items: center; gap: 28px; }
+  .A #head { left: 70px; right: 70px; top: 110px; flex-direction: column; text-align: center; }
+  .B #head { left: 90px; top: 80px; flex-direction: row; text-align: left; }
+  #logo { width: 190px; height: 190px; border-radius: 42px; box-shadow: 0 14px 50px rgba(0,0,0,.45); object-fit: cover; }
+  .B #logo { width: 130px; height: 130px; border-radius: 30px; }
+  .app { font-size: 52px; font-weight: 700; color: var(--gold); line-height: 1.35; }
+  .B .app { font-size: 40px; }
+  .tag { margin-top: 10px; display: inline-block; font-size: 40px; padding: 6px 34px; border-radius: 60px;
+         border: 2px solid var(--gold); color: var(--cream); background: rgba(0,0,0,.22); }
+  .B .tag { font-size: 30px; padding: 4px 26px; }
+
+  /* ---------- caption card ---------- */
+  #card { position: absolute; left: 50%; transform: translateX(-50%); border-radius: 56px;
+          background: rgba(3, 30, 21, .62); border: 3px solid var(--accent); box-shadow: 0 30px 90px rgba(0,0,0,.5);
+          backdrop-filter: blur(4px); }
+  .A #card { width: 940px; height: 760px; top: 640px; }
+  .B #card { width: 1500px; height: 400px; top: 400px; }
+  #mark { position: absolute; top: -34px; left: 50%; transform: translateX(-50%); width: 84px; height: 84px; border-radius: 50%;
+          background: var(--accent); color: var(--green-d); font-size: 76px; line-height: 96px; text-align: center; font-family: serif; }
+  #lines { position: absolute; inset: 0; }
+  .line { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center;
+          padding: 70px 60px 40px; line-height: 1.65; font-weight: 600; opacity: 0; }
+  .A .line { font-size: 68px; }
+  .B .line { font-size: 60px; padding: 50px 90px 30px; }
+  .line .w { display: inline-block; margin: 0 .16em; opacity: 0; will-change: transform, opacity; }
+  .line.respectful .w { color: #fff3c4; }
+  .line.informative .w { color: #ffffff; }
+
+  /* ---------- wave + progress ---------- */
+  #wave { position: absolute; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .A #wave { left: 0; right: 0; top: 1500px; height: 160px; }
+  .B #wave { left: 0; right: 0; top: 860px; height: 110px; }
+  #wave i { display: block; width: 14px; border-radius: 8px; background: var(--accent); }
+  #progress { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: rgba(255,255,255,.12); }
+  #progress i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--mint)); }
+
+  /* ---------- outro ---------- */
+  #outro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+           gap: 34px; text-align: center; opacity: 0; background: radial-gradient(circle at 50% 45%, rgba(14,106,74,.96), rgba(5,46,33,.98)); }
+  #outro img { width: 320px; height: 320px; border-radius: 72px; box-shadow: 0 20px 80px rgba(0,0,0,.55); object-fit: cover; }
+  .B #outro img { width: 230px; height: 230px; border-radius: 52px; }
+  #outro .t1 { font-size: 66px; font-weight: 700; color: var(--gold); line-height: 1.4; padding: 0 60px; }
+  .B #outro .t1 { font-size: 58px; }
+  #outro .t2 { font-size: 44px; color: var(--cream); }
+  #outro .btn { margin-top: 10px; font-size: 42px; font-weight: 700; padding: 18px 54px; border-radius: 22px;
+                background: var(--gold); color: var(--green-d); }
+</style>
+</head>
+<body>
+<div id="stage" class="A">
+  <div id="pattern"></div>
+  <div id="glow"></div>
+  <div id="vignette"></div>
+
+  <header id="head">
+    <img id="logo" alt="">
+    <div>
+      <div class="app" id="appName"></div>
+      <div class="tag" id="tagText"></div>
+    </div>
+  </header>
+
+  <div id="card">
+    <div id="mark">&#10077;</div>
+    <div id="lines"></div>
+  </div>
+
+  <div id="wave"></div>
+  <div id="progress"><i></i></div>
+
+  <section id="outro">
+    <img id="logo2" alt="">
+    <div class="t1" id="outroTitle"></div>
+    <div class="t2" id="outroSub"></div>
+    <div class="btn" id="outroBtn"></div>
+  </section>
+</div>
+
+<script>
+(function () {
+  var MOODS = {
+    respectful: '#e7c65a',
+    informative: '#7fe0b5',
+    calm: '#9fd8ff',
+    emotional: '#ffb199',
+    default: '#e7c65a'
+  };
+  var S = {};
+  var clamp = function (x, a, b) { return Math.max(a === undefined ? 0 : a, Math.min(b === undefined ? 1 : b, x)); };
+  var ease = function (x) { x = clamp(x); return 1 - Math.pow(1 - x, 3); };
+
+  window.init = function (cfg) {
+    S.cfg = cfg;
+    document.getElementById('stage').className = cfg.theme;
+
+    // logo: assets/logo.png if present, otherwise built-in icon.svg
+    ['logo', 'logo2'].forEach(function (id) {
+      var el = document.getElementById(id);
+      el.src = cfg.logo;
+    });
+    document.getElementById('appName').textContent = cfg.appName;
+    document.getElementById('tagText').textContent = cfg.tag;
+    document.getElementById('outroTitle').textContent = cfg.appName;
+    document.getElementById('outroSub').textContent = cfg.outroSub;
+    document.getElementById('outroBtn').textContent = cfg.outroBtn;
+
+    var linesEl = document.getElementById('lines');
+    S.lines = cfg.segments.map(function (seg) {
+      var d = document.createElement('div');
+      d.className = 'line ' + (seg.mood || '');
+      var words = seg.text.split(/\s+/).filter(Boolean).map(function (w) {
+        var s = document.createElement('span');
+        s.className = 'w';
+        s.textContent = w;
+        return s;
+      });
+      var inner = document.createElement('div');
+      words.forEach(function (w, i) { inner.appendChild(w); inner.appendChild(document.createTextNode(' ')); });
+      d.appendChild(inner);
+      linesEl.appendChild(d);
+      return { el: d, words: words, seg: seg };
+    });
+
+    var wave = document.getElementById('wave');
+    S.bars = [];
+    for (var i = 0; i < 28; i++) {
+      var b = document.createElement('i');
+      wave.appendChild(b);
+      S.bars.push(b);
+    }
+    S.pattern = document.getElementById('pattern');
+    S.glow = document.getElementById('glow');
+    S.head = document.getElementById('head');
+    S.card = document.getElementById('card');
+    S.outro = document.getElementById('outro');
+    S.prog = document.querySelector('#progress i');
+    S.stage = document.getElementById('stage');
+    return document.fonts.ready.then(function () {
+      return Promise.all([
+        new Promise(function (r) { var im = document.getElementById('logo'); if (im.complete) r(); else { im.onload = r; im.onerror = r; } })
+      ]);
+    });
+  };
+
+  window.seek = function (t) {
+    var cfg = S.cfg;
+    var audioEnd = cfg.audioDuration;
+
+    // background motion
+    S.pattern.style.transform = 'translate(' + (-(t * 14) % 160) + 'px,' + (-(t * 9) % 160) + 'px)';
+    var g = 1 + 0.06 * Math.sin(t * 1.4);
+    S.glow.style.transform = 'scale(' + g + ')';
+
+    // header + card entrance
+    var hIn = ease(t / 0.8);
+    var outroT = clamp((t - (audioEnd - 0.2)) / 0.7);
+    var hOpacity = hIn * (1 - outroT);
+    S.head.style.opacity = hOpacity;
+    S.head.style.transform = 'translateY(' + ((1 - hIn) * -40) + 'px)';
+    var cIn = ease((t - 0.2) / 0.8);
+    S.card.style.opacity = cIn * (1 - outroT);
+    S.card.style.transform = 'translateX(-50%) translateY(' + ((1 - cIn) * 50) + 'px) scale(' + (0.96 + 0.04 * cIn) + ')';
+
+    // lines
+    var active = null;
+    S.lines.forEach(function (L) {
+      var s = L.seg.start, e = L.seg.end, dur = e - s;
+      var op = Math.min(clamp((t - s) / 0.25), clamp((e - t) / 0.3));
+      if (t < s || t > e) op = 0;
+      L.el.style.opacity = op;
+      if (t >= s && t <= e) active = L;
+      var n = L.words.length;
+      var step = Math.min(0.2, (dur * 0.65) / Math.max(n, 1));
+      L.words.forEach(function (w, i) {
+        var p = ease((t - s - 0.05 - i * step) / 0.28);
+        w.style.opacity = p;
+        w.style.transform = 'translateY(' + ((1 - p) * 26) + 'px)';
+      });
+    });
+
+    // mood accent
+    var mood = active ? active.seg.mood : '';
+    var col = MOODS[mood] || MOODS.default;
+    S.stage.style.setProperty('--accent', col);
+
+    // wave bars react while speech is active
+    var speaking = active ? 1 : 0.15;
+    var A = S.stage.classList.contains('A');
+    var maxH = A ? 150 : 100;
+    S.bars.forEach(function (b, i) {
+      var v = Math.abs(Math.sin(t * 5.2 + i * 0.7)) * 0.6 + Math.abs(Math.sin(t * 2.3 + i * 1.9)) * 0.4;
+      var h = 12 + v * maxH * speaking;
+      b.style.height = h + 'px';
+      b.style.opacity = (1 - outroT) * 0.9;
+    });
+
+    // progress
+    S.prog.style.width = (clamp(t / audioEnd) * 100) + '%';
+    S.prog.parentNode.style.opacity = 1 - outroT;
+
+    // outro (fades in as audio finishes, holds for the extra tail)
+    S.outro.style.opacity = ease(outroT);
+    S.outro.style.transform = 'scale(' + (1 + 0.03 * (1 - ease(outroT))) + ')';
+  };
+})();
+</script>
+</body>
+</html>
