@@ -1,36 +1,47 @@
-# This is a basic workflow to help you get started with Actions
+name: Render Hadith Video
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      theme:
+        description: "Theme: A (9:16 vertical), B (16:9 horizontal), both"
+        required: true
+        default: A
+        type: choice
+        options: [A, B, both]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  render:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    timeout-minutes: 40
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Install ffmpeg and Bengali fonts
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-noto-core fonts-noto-ui-core
+          fc-cache -f
+          fc-list | grep -i "bengali" | head -3
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Render theme A
+        if: ${{ inputs.theme == 'A' || inputs.theme == 'both' }}
+        run: node render.js --theme A
+
+      - name: Render theme B
+        if: ${{ inputs.theme == 'B' || inputs.theme == 'both' }}
+        run: node render.js --theme B
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hadith-video
+          path: output/*.mp4
